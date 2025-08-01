@@ -1,0 +1,44 @@
+//LC print indices of binary tree in list 
+class Solution {
+    public List<List<String>> printTree(TreeNode root) {
+        int maxHeight = 0;
+        maxHeight = dfs(root);
+        int length = (int) Math.pow(2, maxHeight) - 1;  
+        List<List<String>> res = new ArrayList<>();
+        for (int i = 0; i < maxHeight; i++){
+            List<String> temp = new ArrayList<>(); 
+            for (int j = 0; j < length; j++){
+                temp.add(""); 
+            } 
+            res.add(temp);
+        } 
+        int startIndex = (length - 1)/2;
+        int ind = -1; 
+        int startDiv = 4; 
+        Queue<Pair<TreeNode, Integer>> q = new LinkedList<>(); 
+        q.add(new Pair<>(root, startIndex)); 
+        while (!q.isEmpty()){
+            ind++;
+            int n = q.size(); 
+            for (int i = 0; i < n; i++){
+                Pair<TreeNode, Integer> curr = q.poll(); 
+                res.get(ind).set(curr.getValue(), String.valueOf(curr.getKey().val));
+                if (curr.getKey().left != null){
+                    q.offer(new Pair<>(curr.getKey().left, curr.getValue() - (length + 1)/startDiv)); 
+                }
+                if (curr.getKey().right != null){
+                    q.offer(new Pair<>(curr.getKey().right, curr.getValue() + (length + 1)/startDiv)); 
+                }
+            } 
+            startDiv *= 2;  
+        }  
+        return res;  
+    }
+
+    private int dfs(TreeNode root){
+        if (root == null){
+            return 0; 
+        }
+        return 1 + Math.max(dfs(root.left), dfs(root.right)); 
+    }
+}
