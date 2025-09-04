@@ -1,0 +1,58 @@
+//Combinatorics Solution
+class Solution {
+    public int countGoodStrings(int low, int high, int zero, int one) {
+        int res = 0; 
+        for (int i = low; i <= high; i++){
+            res += formula(zero, one, i); 
+        }
+        return res; 
+    }
+
+    private int formula(int a, int b, int c){
+        int gcd = gcd(a, b);
+        if (c % gcd != 0){
+            return 0; 
+        }  
+        int res = 0; 
+        int div = Math.max(a, b); 
+        for (int i = 0; i <= c; i += div){
+            if ((c - i) % Math.min(a, b) == 0){
+                if (c == i){
+                    res++;  
+                    continue; 
+                }
+                if (i == 0){
+                    res++; 
+                    continue; 
+                } 
+                res += comb(c - (i/div * (div - 1)),i/div); 
+            }
+        }
+        return res; 
+    }
+
+    private int comb(int c, int a){
+        return form(c)/(form(c - a) * form(a)); 
+    }
+
+    private int form(int a){
+        int res = 1; 
+        while (a > 1){
+            res *= a; 
+            a--; 
+        }
+        return res; 
+    }
+
+    private int gcd(int a, int b){
+        if (b > a){
+            int temp = a; 
+            a = b;
+            b = temp; 
+        }
+        if (a % b == 0){
+            return b; 
+        }
+        return gcd(b, a % b); 
+    }
+}
